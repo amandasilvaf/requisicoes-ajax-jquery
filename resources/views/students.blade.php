@@ -21,22 +21,26 @@
                             <h4>Alunos</h4> <a href="#" class="btn btn-primary" style="float: right" data-toggle="modal" data-target="#studentModal">Adicionar</a>
                         </div>
                         <div class="card-body">
-                            <table id="studnetTable" class="table">
+                            <table id="studentTable" class="table">
                                 <thead>
                                     <tr>
                                         <th>Nome</th>
                                         <th>Sobrenome</th>
                                         <th>Email</th>
                                         <th>Telefone</th>
+                                        <th>Ação</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($students as $student)
-                                        <tr>
+                                        <tr id="sid{{$student->id}}">
                                             <td>{{$student->firstname}}</td>
                                             <td>{{$student->lastname}}</td>
                                             <td>{{$student->email}}</td>
                                             <td>{{$student->phone}}</td>
+                                            <td>
+                                                <a href="javascript:void(0)" class="btn btn-primary btn-sm">Editar</a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -48,7 +52,7 @@
         </div>
     </section>
 
-
+    {{--  Adicionar  --}}
     <div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -82,7 +86,42 @@
             </div>
         </div>
     </div>
-    
+
+    {{--  Editar  --}}
+    <div class="modal fade" id="studentEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Adicionar Aluno</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="studentEditForm">
+                    @csrf
+                    <input type="hidden" id="id" name="id">
+                    <div class="form-group">
+                        <label for="firstname2">Nome</label>
+                        <input type="text" class="form-control" id="firstname2">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname2">Sobrenome</label>
+                        <input type="text" class="form-control" id="lastname2">
+                    </div>
+                    <div class="form-group">
+                        <label for="email2">Email</label>
+                        <input type="email" class="form-control" id="email2">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone2">Telefone</label>
+                        <input type="text" class="form-control" id="phone2">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
     <script>
@@ -109,7 +148,8 @@
                 {
                     if(response)
                     {
-                        $("#studentTable tbody").prepend(`<tr><td>${response.firstname}</td><td>${response.lastname}</td><td>${response.email}</td><td>${response.phone}</td></tr>`);
+                        console.log(response);
+                        $("#studentTable>tbody").prepend('<tr><td>'+ response.firstname +'</td><td>'+response.lastname+'</td><td>'+response.email+'</td><td>'+response.phone+'</td></tr>');
                         $("#studentForm")[0].reset();
                         $("#studentModal").modal('hide');
                     }
@@ -118,6 +158,8 @@
 
         });
     </script>
+
+    
 
 </body>
 </html>
