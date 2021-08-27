@@ -50,41 +50,74 @@
 
 
     <div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Adicionar Aluno</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Adicionar Aluno</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="studentForm">
+                    @csrf
+                    <div class="form-group">
+                        <label for="firstname">Nome</label>
+                        <input type="text" class="form-control" id="firstname">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">Sobrenome</label>
+                        <input type="text" class="form-control" id="lastname">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefone</label>
+                        <input type="text" class="form-control" id="phone">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-            <form id="studentForm">
-                @csrf
-                <div class="form-group">
-                    <label for="firstname">Nome</label>
-                    <input type="text" class="form-control" id="firstname">
-                </div>
-                <div class="form-group">
-                    <label for="lastname">Sobrenome</label>
-                    <input type="text" class="form-control" id="lastname">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email">
-                </div>
-                <div class="form-group">
-                    <label for="phone">Telefone</label>
-                    <input type="text" class="form-control" id="phone">
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-        </div>
-        </div>
-    </div>
     </div>
     
+
+
+    <script>
+        $("#studentForm").submit(function(event){
+            event.preventDefault();
+
+            let firstname = $('#firstname').val();
+            let lastname = $('#lastname').val();
+            let email = $('#email').val();
+            let phone = $('#phone').val();
+            let _token = $("input[name=_token]").val();
+
+            $.ajax({
+                url: "{{route('student.add')}}",
+                type: "POST",
+                data: {
+                    firstname:firstname,
+                    lastname:lastname,
+                    email:email,
+                    phone:phone,
+                    _token:_token
+                },
+                success: function(response)
+                {
+                    if(response)
+                    {
+                        $("#studentTable tbody").prepend(`<tr><td>${response.firstname}</td><td>${response.lastname}</td><td>${response.email}</td><td>${response.phone}</td></tr>`);
+                        $("#studentForm")[0].reset();
+                        $("#studentModal").modal('hide');
+                    }
+                }
+            });
+
+        });
+    </script>
+
 </body>
 </html>
