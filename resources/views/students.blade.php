@@ -18,16 +18,16 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4>Students</h4> <a href="#" class="btn btn-primary" style="float: right">Add New</a>
+                            <h4>Alunos</h4> <a href="#" class="btn btn-primary" style="float: right" data-toggle="modal" data-target="#studentModal">Adicionar</a>
                         </div>
                         <div class="card-body">
                             <table id="studnetTable" class="table">
                                 <thead>
                                     <tr>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
+                                        <th>Nome</th>
+                                        <th>Sobrenome</th>
                                         <th>Email</th>
-                                        <th>Phone</th>
+                                        <th>Telefone</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -46,8 +46,45 @@
                 </div>
             </div>
         </div>
-
     </section>
+
+
+    <div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Adicionar Aluno</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="studentForm">
+                @csrf
+                <div class="form-group">
+                    <label for="firstname">Nome</label>
+                    <input type="text" class="form-control" id="firstname">
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Sobrenome</label>
+                    <input type="text" class="form-control" id="lastname">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input type="text" class="form-control" id="phone">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+        </div>
+    </div>
+    </div>
     
 </body>
 </html>
