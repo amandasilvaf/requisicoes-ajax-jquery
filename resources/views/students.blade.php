@@ -39,7 +39,7 @@
                                             <td>{{$student->email}}</td>
                                             <td>{{$student->phone}}</td>
                                             <td>
-                                                <a href="javascript:void(0)" class="btn btn-primary btn-sm">Editar</a>
+                                                <a href="javascript:void(0)" onclick="editStudent({{$student->id}})" class="btn btn-primary btn-sm">Editar</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -50,10 +50,48 @@
                 </div>
             </div>
         </div>
+
+         {{--  Editar  --}}
+    <div class="modal fade" id="studentEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Adicionar Aluno</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="studentEditForm">
+                    @csrf
+                    <input type="hidden" id="id" name="id">
+                    <div class="form-group">
+                        <label for="firstname">Nome</label>
+                        <input type="text" class="form-control" id="firstname2">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastname">Sobrenome</label>
+                        <input type="text" class="form-control" id="lastname2">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email2">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Telefone</label>
+                        <input type="text" class="form-control" id="phone2">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
     </section>
 
-    {{--  Adicionar  --}}
-    <div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     {{--  Adicionar  --}}
+     <div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
             <div class="modal-header">
@@ -86,42 +124,7 @@
             </div>
         </div>
     </div>
-
-    {{--  Editar  --}}
-    <div class="modal fade" id="studentEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Adicionar Aluno</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="studentEditForm">
-                    @csrf
-                    <input type="hidden" id="id" name="id">
-                    <div class="form-group">
-                        <label for="firstname2">Nome</label>
-                        <input type="text" class="form-control" id="firstname2">
-                    </div>
-                    <div class="form-group">
-                        <label for="lastname2">Sobrenome</label>
-                        <input type="text" class="form-control" id="lastname2">
-                    </div>
-                    <div class="form-group">
-                        <label for="email2">Email</label>
-                        <input type="email" class="form-control" id="email2">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone2">Telefone</label>
-                        <input type="text" class="form-control" id="phone2">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </form>
-            </div>
-        </div>
-    </div>
+  
 
 
     <script>
@@ -159,7 +162,53 @@
         });
     </script>
 
-    
+    <script>
+        function editStudent(id)
+        {
+            $.get('/students/'+id, function(student){
+                $('#id').val(student.id);
+                $('#firstname2').val(student.firstname);
+                $('#lastname2').val(student.lastname);
+                $('#email2').val(student.email);
+                $('#phone2').val(student.phone);
+                $('#studentEditModal').modal('toggle');
+            });
+        }
+
+        $("#studentEditForm").submit(function(event){
+            event.preventDefault();
+
+            let id = $("#id").val();
+            let firstname = $('#firstname2').val();
+            let lastname = $('#lastname2').val();
+            let email = $('#email2').val();
+            let phone = $('#phone2').val();
+            let _token = $("input[name=_token]").val();
+
+            $.ajax({
+                url: "{{ route('student.update')}}",
+                type: "PUT",
+                data:{
+                    id:id,
+                    firstname:firstname,
+                    lastname:lastname,
+                    email:email,
+                    phone:phone,
+                    _token:_token
+                },
+                success: function(response)
+                {
+                    $('#sid' + response.id + 'td:nth-child(1)').text(response.firstname); 
+                    $('#sid' + response.id + 'td:nth-child(2)').text(response.lastname);
+                    $('#sid' + response.id + 'td:nth-child(3)').text(response.email); 
+                    $('#sid' + response.id + 'td:nth-child(4)').text(response.phone);  
+                    $('#studentEditModal').modal('toggle');
+                    $('#studentEditForm')[0].reset();
+                }
+            });
+        });
+
+    </script>
 
 </body>
 </html>
